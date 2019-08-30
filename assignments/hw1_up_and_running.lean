@@ -2,7 +2,16 @@
 This text isn't formal logic or code. It's natural 
 language text embedded into a formal logic or code 
 file, otherwise known as a "comment". This comment
-explains what to for this assignment.
+explains what to for this assignment. 
+
+Do not make any changes to this file. Rather, make
+a copy of it in the "mywork" directory. The close
+this panel so that you're sure you're working on
+the copy in the mywork directory.
+
+To do this, right click on "hw1_up_and_running.lean"
+and select Copy. Then right click on "mywork" and
+select Paste.
 
 Each of the following lines of logic asserts that
 an identifer (such as n on the first line) can be
