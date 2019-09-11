@@ -61,17 +61,32 @@ def neg' : bool → bool
 | ff := tt
 | tt := ff
 
-#eval neg tt
-#eval neg ff 
-
-#eval neg' tt
-#eval neg' ff
-
 /-
 Look: the tables look like the truth tables.
 We can define finite functions precisely with tables.
 -/
 
 /-
-Next up: Binary functions.
+More generally we can define
+functions by cases. Here's 
+the Fibonacci function.
+-/ 
+
+def fib: nat → nat 
+| 0 := 0
+| 1 := 1
+| (n' + 2) := fib n' + fib (n'+1)
+
+#eval neg tt
+#eval neg ff 
+
+#eval neg' tt
+#eval neg' ff
+
+#eval fib 10
+#eval fib 35    -- slow!
+
+
+/-
+Next up: Binary Boolean functions.
 -/
