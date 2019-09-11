@@ -21,7 +21,8 @@ Make a copy of this file in your "mywork" directory
 the read and answer the questions by editing this fie.
 When you are done, *save it*, then upload it to Collab. 
 That is how you will submit work in this class. Be sure 
-to double check your submission to be sure you uploaded the right file.
+to double check your submission to be sure you uploaded
+the right file.
 -/
 
 /-
@@ -90,18 +91,18 @@ QUESTION #2 (Three parts, A - C)
 
 Suppose you are asked to write a program, P(x), taking 
 one argument, x, a "natural number", and that it must 
-satisfy a specification, P(x), that defines a function 
+satisfy a specification, S(x), that defines a function 
 in a pure functional programming language. 
 
 A. Using simple English to express your answer, what 
-proposition that must be true for P to be accepted as a 
+proposition must be true for P to be accepted as a 
 correct implementation of S. Hint: We discussed this in 
 class.
 
 Answer:
 
 B. Why is testing alone generally inadequate to prove 
-pthe correctness of such a program, P?
+the correctness of such a program, P?
 
 Answer: 
 
