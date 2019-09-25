@@ -121,16 +121,15 @@ return a Boolean result.
 
 
 /-
-4. The Boolean "or" function is true if and onlyl if at least 
-one of b1 and b2 is true. Equivalently is is false if and only 
+4. The Boolean "or" function is true if and only if at least 
+one of b1 and b2 is true. Equivalently it is false if and only 
 if both b1 and b2 are false. Implement this function in each
 of the three styles, using or_bool as the function name. You 
 may use the example of "and_bool" above as a model. While you
 could just cut and paste, we strongly recommend that you type
-in your answer, and remaining answers, in full. Learning new
-syntax is basically an exercise is "muscle memory". So don't 
-take shortcuts here. Learn the syntax now and it will save you
-a great deal of frustration later.
+your answers in full. Learning new syntax is an exercise is 
+"muscle memory", so don't take shortcuts here. Learn the 
+syntax now and it will save you frustration later.
 -/
 
 
@@ -156,10 +155,12 @@ false if and only if its first argument is true and its second is false. Impleme
 
 
 /-
-7. The Boolean "equivalent" function is true if its two arguments are the same, either both true or both false, 
+7. The Boolean "equivalent-to" function is true if its two arguments are the same, either both true or both false; 
 otherwise it is false. Implement it in the three styles,
 using equiv_bool as a function name.
 -/
+
+
 
 
 -- leave the following in place as the last line in this file
