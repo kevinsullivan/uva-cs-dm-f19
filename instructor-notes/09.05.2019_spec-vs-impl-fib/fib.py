@@ -15,6 +15,8 @@ def fib_spec(x) :
     else: 
         return fib_spec(x-2)+ fib_spec(x-1)
 
+
+
 '''
 Implementation of the Fibonacci function.
 Requires value of n to be a natural number.
@@ -40,5 +42,7 @@ def fib_impl(n):
         i = i + 1
     return f1
 
-print(fib_impl(6))
+print(fib_impl(100000))
+
+
 

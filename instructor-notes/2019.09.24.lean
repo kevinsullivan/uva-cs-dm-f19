@@ -1,18 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 namespace mlist
 
 open list   -- Lean-provided data type
@@ -29,8 +14,8 @@ at lists as provided by Lean's library.
 
 /-
 Inductive definition: A list is either 
-empty or it is an element followed by a 
-one-smaller list.
+empty or it is constucted (thus "cons")
+from an element and a one-smaller list.
 -/
 
 /-
@@ -179,7 +164,7 @@ def mtail : list nat → list nat
 -- return length of list
 def mlength : list nat → nat
 | [] := 0
-| (cons h t) := 1 + (mlength t)
+| (cons _ t) := 1 + (mlength t)
 
 
 
@@ -207,19 +192,175 @@ mlength [1, 2, 3, 4]
 -/
 
 
-def mdouble : list nat → list nat 
+
+/-
+After review of preceding,
+START 9/26/2019 From Here
+-/
+
+/-
+Warmup exercise: write countdown function.
+Given a natural number, n, return a list of
+natural numbers, [n, n-1, ..., 0].
+-/
+
+open nat
+
+def countdown : ℕ → list nat
+| 0 := [0]
+| (succ n') := cons (succ n') (countdown n')
+
+#eval countdown 10
+
+
+
+/-
+Exercise: write fib function. The key new element in
+this definition is that it has two base cases instead
+of one, and the third, recursive, case uses a more
+complex form of pattern matching. 
+-/
+
+
+def fib : ℕ → ℕ 
+| nat.zero := nat.zero
+| (nat.succ nat.zero) := (nat.succ nat.zero)
+| (nat.succ (nat.succ n')) := (fib n') + (fib (nat.succ n'))
+
+/-
+We can clean up this definition using Lean's built-in
+machanisms for writing natural number values. The
+following logic is absolutely equivant to the preceding
+version.
+-/
+
+def fib' : ℕ → ℕ 
+| 0 := 0
+| 1 := 1
+| (n' + 2) := (fib n') + (fib (n' + 1))
+
+#eval fib 10
+#eval fib' 10
+
+
+/-
+Now a function that takes a list (of nats) and
+that returns a new list, like the first, except
+that every element in the first list is doubled
+in the second list.
+
+Study the second case especially carefully. On
+the left of the :=, we take apart the argument
+list into a head, h, and a tail, t. On the right,
+we use cons to build a new list: one with 2*t at
+its head and with a doubled version of t as its
+tail. The doubled version of t is returned by the
+recusive application of mdouble to t.
+-/
+def mdouble : list ℕ → list ℕ  
 | [] := []
 | (cons h t) := cons (h*2) (mdouble t)
 
 #eval mdouble []
 #eval mdouble l4
 
+
+/-
+We don't want to have to write multiple
+functions like mdouble that differ only
+in the function applied to h. The solution
+is to make that function a parameter. This
+generalizes the function to one that can
+transform any list of natural numbers 
+into a corresponding list where the 
+new list elements are computed by 
+applying the function to the elements
+of the original list.
+-/
 def mmap : (ℕ → ℕ) → list ℕ → list ℕ 
 | f [] := []
 | f (cons h t) := cons (f h) (mmap f t)
 
-#eval mmap nat.succ [1,2,3,4]
-#eval mmap (λ n : ℕ, n*n) [1,2,3,4]
+#eval mmap nat.succ [1,2,3,4]   -- add one to each element
+#eval mmap (λ (n : ℕ), n*n) [1,2,3,4] -- square each element
+
+
+/-
+A "reduce" function takes a list as an argument and
+reduces it to a single value by applying an operation
+between elements in the list. If the operation is add,
+the result is the sum of the elements in the list. If
+the operation is mul, the result is the product of all
+the elements in the list. A key issue in this design
+is that the value to return in the base case depends
+on the operation being applied: in short, the base
+case must return the "identity element" for the given
+operator, such a 0 for add and 1 for mult.
+-/
+
+def mreduce_add : list ℕ → nat
+| [] := 0
+| (cons h t) := h + (mreduce_add t)
+
+
+#eval mreduce_add [1,2,3,4,5,6,7,8,9,10]
+
+
+def mreduce_mult : list ℕ → nat
+| [] := 1
+| (cons h t ) := h * (mreduce_mult t)
+
+#eval mreduce_mult [1,2,3,4,5,6,7,8,9,10]
+
+/-
+Once again we can generalize from these
+examples by replacing specific details
+that vary from version to version with
+parameters. 
+
+The general "reduce" function thus takes both a 
+binary operation (such as add or mul) and the 
+identity value for that operator as parameters. 
+-/
+
+def mreduce : (ℕ → ℕ → ℕ) → ℕ → (list ℕ) → nat
+| f id [] := id
+| f id (cons h t) := f h (mreduce f id t)
+
+#eval mreduce nat.add 0 [10,9,8,7,6,5]
+#eval mreduce nat.mul 1 [10,9,8,7,6,5]
+
+
+/-
+Filter
+-/
+
+def mfilter : (ℕ → bool) → list ℕ → list ℕ 
+| p [] := []
+| p (cons h t) :=
+    if (p h) 
+    then cons h (mfilter p t) 
+    else (mfilter p t)
+
+
+def lt_5 (n : ℕ) : bool :=
+    n < 5
+
+
+def even (n : ℕ) : bool :=
+    n % 2 = 0
+
+
+#eval mfilter lt_5 (countdown 10)
+#eval mfilter even (countdown 10)
+
+
+
+
+
+
+
+
 
 
 
