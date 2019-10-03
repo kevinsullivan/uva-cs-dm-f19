@@ -93,8 +93,18 @@ def false_bool : bool → bool :=
 
 -- Now false_bool'
 
+def false_bool' : bool → bool
+| ff := ff
+| tt := ff
+
 
 -- And now false_bool''
+
+def false_bool''(b: bool) : bool :=
+    match b with
+        | ff := ff
+        | tt := ff
+    end
 
 /-
 2. Do the same for the always true unary Boolean function,
@@ -103,13 +113,34 @@ two ' marks to avoid name conflicts. You will use ' in this
 way for each of the remaining parts of this assignment).
 -/
 
+def true_bool : bool → bool :=
+    λ (b : bool),
+        tt
 
+def true_bool' : bool → bool
+| ff := tt
+| tt := tt
+
+def true_bool'' (b : bool) : bool :=
+    match b with
+        | ff := tt
+        | tt := tt
+    end
 
 /-
 3. Do the same for the unary Boolean identity function,
 using ident_bool (and ' variants) as the function name.
 -/
 
+def id_bool : bool → bool :=
+    λ (b : bool),
+        b
+
+def id_bool' : bool → bool
+| b := b
+
+def id_bool'' (b : bool) : bool :=
+    b
 
 
 /-
@@ -132,6 +163,28 @@ your answers in full. Learning new syntax is an exercise is
 syntax now and it will save you frustration later.
 -/
 
+def or_bool : bool → bool → bool :=
+    λ (b1 b2 : bool),       --shorthand for two lambdas
+        match b1, b2 with   -- matching on two arguments
+            | ff, ff := ff
+            | ff, tt := tt
+            | tt, ff := tt
+            | tt, tt := tt
+        end
+
+def or_bool' : bool → bool → bool 
+    | ff ff := ff
+    | ff tt := tt
+    | tt ff := tt
+    | tt tt := tt
+
+def or_bool'' (b1 b2 : bool) : bool :=
+       match b1, b2 with
+            | ff, ff := ff
+            | ff, tt := tt
+            | tt, ff := tt
+            | tt, tt := tt
+        end
 
 
 
@@ -141,6 +194,28 @@ exactly one of its arguments is true. Implement this function
 in each style using xor_bool as the function name.
 -/
 
+def xor_bool : bool → bool → bool :=
+    λ (b1 b2 : bool),       --shorthand for two lambdas
+        match b1, b2 with   -- matching on two arguments
+            | ff, ff := ff
+            | ff, tt := tt
+            | tt, ff := tt
+            | tt, tt := ff
+        end
+
+def xor_bool' : bool → bool → bool 
+    | ff ff := ff
+    | ff tt := tt
+    | tt ff := tt
+    | tt tt := ff
+
+def xor_bool'' (b1 b2 : bool) : bool :=
+       match b1, b2 with
+            | ff, ff := ff
+            | ff, tt := tt
+            | tt, ff := tt
+            | tt, tt := ff
+        end
 
 
 
@@ -151,6 +226,28 @@ true and its second argument is also true. Equivalently it is
 false if and only if its first argument is true and its second is false. Implement it in each style, calling it implies_bool.
 -/
 
+def implies_bool : bool → bool → bool :=
+    λ (b1 b2 : bool),       --shorthand for two lambdas
+        match b1, b2 with   -- matching on two arguments
+            | ff, ff := tt
+            | ff, tt := tt
+            | tt, ff := ff
+            | tt, tt := tt
+        end
+
+def implies_bool' : bool → bool → bool 
+    | ff ff := tt
+    | ff tt := tt
+    | tt ff := ff
+    | tt tt := tt
+
+def implies_bool'' (b1 b2 : bool) : bool :=
+       match b1, b2 with
+            | ff, ff := tt
+            | ff, tt := tt
+            | tt, ff := ff
+            | tt, tt := tt
+        end
 
 
 
@@ -160,6 +257,28 @@ otherwise it is false. Implement it in the three styles,
 using equiv_bool as a function name.
 -/
 
+def equiv_bool : bool → bool → bool :=
+    λ (b1 b2 : bool),       --shorthand for two lambdas
+        match b1, b2 with   -- matching on two arguments
+            | ff, ff := tt
+            | ff, tt := ff
+            | tt, ff := ff
+            | tt, tt := tt
+        end
+
+def equiv_bool' : bool → bool → bool 
+    | ff ff := tt
+    | ff tt := ff
+    | tt ff := ff
+    | tt tt := tt
+
+def equiv_bool'' (b1 b2 : bool) : bool :=
+       match b1, b2 with
+            | ff, ff := tt
+            | ff, tt := ff
+            | tt, ff := ff
+            | tt, tt := tt
+        end
 
 
 
