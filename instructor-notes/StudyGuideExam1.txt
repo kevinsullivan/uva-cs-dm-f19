@@ -1,0 +1,23 @@
+1. Give examples of terms of various types, including basic data types and function types. To answer the function-type-related questions, you will have to know how to write lambda expressions.
+
+2. Be able to produce recursive function definitions (in Lean) for simple arithmetic functions. Know how to reason about and write appropriate base and recursive cases for functions involving natural numbers. A base case generally involves an argument value of nat.zero. A recursive case occurs when an argument value is of the form (nat.succ n') for some n'. These two cases correspond to the two constructors for the nat data type. You might be tempted to name the argument in a recursive case n and to recurse on the expression (n-1), but this will not work in Lean, because Lean cannot then prove to itself that the recursion terminates. The definition of the factorial function (in Lean) is a good example to study. 
+
+3. Understand key tradeoffs when defining functions using mathematical logic, and using imperative programming languages, respectively.
+
+4. Understand key shortcomings of natural languages for expressing mathematical (including specification and implementation) concepts.
+
+5. Understand precisely what it means for a program to be correct with respect (or "equivalent") to a specification written in math logic.
+
+6. Know by heart the truth tables for all of the Boolean functions, both unary and binary, that we have discussed.
+
+7. Know how lists (or "sequences") are inductively defined and be able to define recursive functions that operate on lists.
+
+8. Know how to define polymorphic functions that work with values of type (list alpha), where alpha is a type parameter. Understand implicit arguments and how to use them in Lean funtion definitions.
+
+9. Know how to define simple enumerated types in Lean and functions that operate on values of such types. The day type that we covered is an example of such a type.
+
+10. Understand the higher-order "map" and "reduce" functions that we've studied. The key characteristic of higher-order functions is that they take function arguments, or return functions as results, or both. Be able to implement and use map and reduce functions. 
+
+11. Understand how to specify and work with "product" types. The "prod" type we defined is an example of a type whose values are ordered *pairs* of values of other specified types. 
+
+12. Understand the combinatorics of binary values. E.g., there are 2^n possible values of a sequence of n binary variables.
