@@ -48,7 +48,7 @@ does not provide one for iff. Call it biff.
 
 Here is the code as developed in class.
 Now review the step-by-step instructions,
-and proceed to read and midify this logic
+and proceed to read and modify this logic
 as required. We've bracketed areas where
 new material will have to be added. 
 -/
@@ -198,7 +198,7 @@ Note: R ⇒ R can be pronounced as any of:
 - the truth of R implies the truth of R
 - R implies R  
 
-The second and fourth pronounciations
+The second and fourth pronunciations
 are the two that we prefer to use. 
 -/
 
@@ -276,7 +276,7 @@ comment and then say whether given the
 proposition is valid, satisfiable but
 not valid, or unsatisifiable. 
 
-Note: This expression reqires that 
+Note: This expression requires that 
 you  have properly specified ¬ and
 ⇒ as notations in our pExp language.
 The errors indicated in many of the
