@@ -159,10 +159,11 @@ of type pExp.
 -/
 
 #check ¬ (X ∧ Y) ∨ (X ∨ Z) -- correct
+/-
 #check ¬ (X ∧ Y) ∨ (X ∨ )  -- error
 #check ¬ X ¬ Y             -- error
 #check pTrue pFalse        -- error
-
+-/
 
 /-
     *****************
