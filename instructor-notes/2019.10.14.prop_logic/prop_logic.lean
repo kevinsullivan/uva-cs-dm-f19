@@ -95,7 +95,9 @@ inductive unOp : Type
 inductive binOp : Type
 | andOp
 | orOp
-
+| xorOp
+| implOp
+| iffOp
 
 inductive pExp : Type
 | litExp : bool → pExp
@@ -114,15 +116,18 @@ def pFalse := litExp ff
 def pNot := unOpExp notOp
 def pAnd := binOpExp andOp
 def pOr := binOpExp orOp
-
+def pXor := binOpExp xorOp
+def pImpl := binOpExp implOp
+def pIff := binOpExp iffOp
 
 -- conventional notation
 
 notation e1 ∧ e2 :=  pAnd e1 e2
 notation e1 ∨ e2 :=  pOr e1 e2
 notation ¬ e := pNot e
-
-
+notation e1 ⇒ e2 := pImpl e1 e2
+notation e1 ⊕ e2 := pXor e1 e2
+notation e1 ↔ e2 := pIff e1 e2
 
 /-
     *****************
@@ -133,11 +138,21 @@ notation ¬ e := pNot e
 def interpUnOp : unOp → (bool → bool) 
 | notOp := bnot
 
+def bimpl : bool → bool → bool
+| tt ff := ff
+| _ _ := tt
+
+def biff : bool → bool → bool
+| tt tt := tt
+| ff ff := tt
+| _ _ := ff
 
 def interpBinOp : binOp → (bool → bool → bool) 
 | andOp := band
 | orOp := bor
-
+| xorOp := bxor
+| implOp := bimpl
+| iffOp := biff
 
 /-
 Given a pExp and an interpretation
