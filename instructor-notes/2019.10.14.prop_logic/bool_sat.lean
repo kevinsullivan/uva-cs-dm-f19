@@ -27,7 +27,7 @@ def mrbn: ℕ → ℕ → bool
 | 0 n := n % 2 = 1
 | (nat.succ m') n := mrbn m' (n/2) 
 
-#eval mrbn 1 7
+#eval mrbn 2 4
 
 /-
 The mth canonical interpretation
@@ -40,7 +40,7 @@ exactly from 0 to (n-1).
 def mthInterpOf2toN (m n: ℕ) : var → bool :=
     -- for m >= 2^n, inter/row is all false
     if (m >= 2^n)
-    then (λ v, ff) 
+        then (λ v, ff) 
     else
     -- otherwise fill first n entries with
     -- i'th digits of m expressed in binary
@@ -81,6 +81,6 @@ def interp_results (p : pExp) (n : ℕ) :=
         (λ (i : var → bool), pEval p i)
         (interps n)
 
-#reduce interp_results (X ∧ Y) 2
+#eval interp_results ((X ∧ Y) ↔ (Y ∧ X)) 2
 
 
