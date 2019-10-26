@@ -96,7 +96,7 @@ interp5 interpretation.
 
 #eval _
 #eval _
-#eval run_cmd
+#eval _
 
 
 /-
