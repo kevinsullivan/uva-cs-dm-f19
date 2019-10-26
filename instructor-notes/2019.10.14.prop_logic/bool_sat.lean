@@ -134,7 +134,7 @@ a given propositional logic expression, p,
 under each of its possible interpretations.
 That is, return a list of the truth table
 "result" for the given expression under 
-each of its possible interpretations.
+each of its possible
 The second argument, n, indicates the highest
 "index" of any variable in the expression, p.
 

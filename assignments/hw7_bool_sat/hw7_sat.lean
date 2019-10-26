@@ -32,9 +32,7 @@ number, 8485672345, as a ℕ value
 in unary?
 -/
 
-#eval mth_bit_from_right_in_n 
-        9
-        8485672345
+#eval _
 
 
 /-
@@ -86,7 +84,7 @@ function, and any specification text, even
 if informal, given with the formal definition.
 -/
 
-def interp5 := mth_interp_n_vars 5 num_vars
+def interp5 := _
 
 /-
 #3. What Boolean values are assigned to 
@@ -96,9 +94,9 @@ evaluating each variable expressions under the
 interp5 interpretation.
 -/
 
-#eval pEval P interp5
-#eval pEval Q interp5
-#eval pEval R interp5
+#eval _
+#eval _
+#eval run_cmd
 
 
 /-
@@ -131,7 +129,7 @@ the truth table for "theExpr" as
 defined above.
 -/
 
-#eval truth_table_results theExpr num_vars
+#eval _
 
 /-
 #6. Copy and paste the truth table
@@ -156,7 +154,6 @@ if i is a model of e (otherwise false).
 -/
 
 def isModel :pExp → (var → bool) → bool 
-| e i := pEval e i
 
 
 /-
@@ -185,11 +182,10 @@ to be reduced to a single bool result.
 
 def fold_bool :
     (bool → bool → bool) → bool → (list bool) → bool 
-| op id [] := id
-| op id (list.cons h t) := op h (fold_bool op id t)
+
 
 def is_valid : pExp → ℕ → bool
-| e n := fold_bool band tt (truth_table_results e n)
+
 
 /-
 Write similar one-line implementations of the
@@ -199,10 +195,10 @@ implementation of is_unsatisfiable.
 -/
 
 def is_satisfiable : pExp → ℕ → bool
-| e n := fold_bool bor ff (truth_table_results e n)
+
 
 def is_unsatisfiable : pExp → ℕ → bool
-| e n := ¬ is_satisfiable e n
+
 
 /-
 8. Use your is_valid function to determine which
@@ -240,26 +236,3 @@ def affirm_disjunct := (P ∨ Q) ⇒ P ⇒ ¬ Q
 def deny_antecedent := (P ⇒ Q) ⇒ (¬ P ⇒ ¬ Q)
 
 -- Answer below
-
-#eval is_valid true_intro num_vars
-#eval is_valid false_elim num_vars
-#eval is_valid and_intro num_vars
-#eval is_valid and_elim_left num_vars
-#eval is_valid and_elim_right num_vars
-#eval is_valid or_intro_left num_vars
-#eval is_valid or_intro_right num_vars
-#eval is_valid or_elim num_vars
-#eval is_valid iff_intro num_vars
-#eval is_valid iff_elim_left num_vars
-#eval is_valid iff_elim_right num_vars
-#eval is_valid arrow_elim num_vars
-#eval is_valid affirm_consequence num_vars
-#eval is_valid resolution num_vars
-#eval is_valid unit_resolution num_vars
-#eval is_valid syllogism num_vars
-#eval is_valid modus_tollens num_vars
-#eval is_valid neg_elim num_vars
-#eval is_valid excluded_middle num_vars
-#eval is_valid neg_intro num_vars
-#eval is_valid affirm_disjunct num_vars
-#eval is_valid deny_antecedent num_vars
