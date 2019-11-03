@@ -75,7 +75,7 @@ def two_plus_two_eq_four : _ := _
 
 A predicate is a parameterized proposition. By
 applying a predicate to different arguments, we get
-different propositions. Such a propopsition is can 
+different propositions. Such a propopsition can 
 be said to be "about" the argument to which it was 
 applied. 
 
@@ -95,6 +95,7 @@ or, (2) it is two more than another even number.
 
 Think about this inductive definition. Why does it
 cover all possible cases -- an infinitude of cases?
+(No need for an answer here.)
 -/
 
 /-
@@ -128,7 +129,7 @@ B. [15 points]
 We formalize a predicate, such as is_even, as a
 family of "inductive propositions" given by a
 function from argument values to propositions. 
-Such an inductive definition thus has the form, 
+Such an inductive definition thus has the type, 
 α → Prop, where α is the type of argument to 
 which the predicate is applied. 
 
@@ -144,9 +145,9 @@ proposition.
 These rules are the (formal) axioms that can be
 used to construct proofs. The first one (below)
 states that the term, pf_zero_is_even, is to be
-accepted as a proof of (is_even 0), which is how
+accepted as a proof of is_even 0 (which is how
 we write the application of a predicate to a value
-to obtain a proposition, here that "0 is even".
+to obtain a proposition, here that "0 is even").
 
 The second constructor/axiom/rule provides a way
 to build a proof of (is_even 2+n) by applying the
@@ -226,10 +227,8 @@ open is_odd
 /-
 Introducing an important concept. In the preceding
 problems, we've seen that we can think of a predicate
-with one argument as defining a set of objects that
-have a particular property. For example, is_even as
-a predicate efines the set of all natural numbers that 
-have the property of being even. We shift perspective
+with one argument as defining a property objects, such
+as the property of being even. Now we shift perspective
 from the concept of a property, per se, to the concept
 of "the set of objects that have a given property." The
 set of objects that have the is_even property, for
@@ -245,8 +244,10 @@ The elements of these sets are all, and only,
 the values that "satisfy" the is_even predicate.
 A value satisfies its predicate if, when plugged
 in, the resulting proposition has a proof (and so
-is true). A predicates with a single argument thus
-defines a set.
+is true). The key conclusion is that a predicate
+with a single argument defines a *set*, namely 
+the set of all and only those objects that have
+that property.
 -/
 
 /-
@@ -277,9 +278,11 @@ where the two elements of each pair are co-equal.
 Study and understand the following specification
 of this binary relation. Look at the construtor,
 mk, in particular: it says that you can construct
-a proof that a pair of values, n and m, is in this
-relation if you have a proof of n = m. (Here we're
-using Lean's built in equality relation.) 
+a proof that a pair of values, n and m, is in our
+id_nat_relation if you have a proof of n = m. (In 
+other words, it suffices to show that n = m using
+Lean's built in equality relation to construct a
+proof that (n, m) is in our id_nat_relation.) 
 -/
 
 inductive id_nat_relation : ℕ → ℕ → Prop
@@ -288,9 +291,11 @@ inductive id_nat_relation : ℕ → ℕ → Prop
 /-
 A. [10 points]
 
-Give a Lean proof that id_nat_relation conceptually 
-contains the pair, (3, 3). Do it by completing the
-following conjecture.
+Give a formal proof that id_nat_relation contains 
+the pair, (3, 3). Do it by completing the following
+proof. Think carefully about the third argument: you
+need a *value* of what type here? What do we call a
+value of a logical type?
 -/
 
 theorem three_three_in_id : id_nat_relation 3 3 :=
@@ -344,8 +349,8 @@ B. [Double extra credit.]
 Formally define what we mean by a relation being
 symmetric and transitive, in the style of the above
 definition of reflexive, and formally state and show
-that our id_nat_refl relation is also symmetric and
-transitive.
+that our id_nat_reflexive relation is also symmetric
+and transitive.
 -/
 
 
