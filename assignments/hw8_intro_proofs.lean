@@ -9,7 +9,7 @@ namespace hw8
 -/
 
 /-
-A. [5 points] Fill in the blank.
+A. [10 points] Fill in the blank.
 
 When we say that the binary equality relation, 
 =, on objects of any type, α, is reflexive, we
@@ -20,7 +20,7 @@ ANSWER:
 
 
 /- 
-B. [5 points]
+B. [10 points]
 Complete the following definition in Lean
 to formalize the proposition that 1 equals
 1.
@@ -32,7 +32,7 @@ def one_eq_one : Prop :=
 
 
 /-
-C. [5 points]
+C. [10 points]
 Give an English language proof of the
 proposition that 1 = 1 by completing the
 following incomplete proof.
@@ -46,7 +46,7 @@ ANSWER:
 
 
 /- 
-D. [5 points]
+D. [10 points]
 Give a formal proof of this proposition
 by completing the following definition.
 -/
@@ -56,7 +56,7 @@ def proof_that_one_eq_one : one_eq_one :=
     _
 
 
-/- [5 points]
+/- [10 points]
 E. Complete the following test case to produce 
 an example that suggests (correctly) that Lean
 will accept a proof that two *different terms* are 
@@ -124,7 +124,7 @@ ANSWER:
 -/
 
 /-
-B. [15 points]
+B. [10 points]
 
 We formalize a predicate, such as is_even, as a
 family of "inductive propositions" given by a
@@ -198,7 +198,7 @@ begin
 end
 
 /-
-C. [15 points]
+C. [10 points]
 
 Formally specify a predicate, is_odd, on the 
 natural numbers.  You can reason about any
@@ -303,7 +303,9 @@ theorem three_three_in_id : id_nat_relation 3 3 :=
     id_nat_relation.mk _ _ _
 
 /-
-B. Explain in just a few words why it is not
+B. [10 points]
+
+Explain in just a few words why it is not
 possible to prove that (3,5) is in this relation.
 -/
 
