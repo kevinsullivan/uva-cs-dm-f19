@@ -15,8 +15,13 @@ inductive nifty_was_a_cat : Prop
 -- proofs
 | there_are_pictures_of_nifty
 | we_remember_nifty_fondly
+open nifty_was_a_cat 
 
+theorem nwac : nifty_was_a_cat := there_are_pictures_of_nifty
+theorem there_is_a_natural_number : ℕ := 1
 
+/-
+-/
 
 inductive pet : Type
 | nifty -- a cat
@@ -32,6 +37,21 @@ inductive was_a_cat : pet → Prop
 | tom_proof : was_a_cat tom
 
 open was_a_cat
+
+#check was_a_cat
+#check (was_a_cat nifty)
+#check (was_a_cat fido)
+#check (was_a_cat cheese)
+#check (was_a_cat tom)
+
+theorem nwac' : was_a_cat nifty := 
+    nifty_proof
+
+#check nifty_proof
+#check tom_proof
+
+theorem cwac : was_a_cat cheese := _
+
 /-
 Property of a pet: that of having 
 been a cat. Some have it. Some don't
@@ -65,6 +85,11 @@ Prop → Prop → Prop. This is just a
 Prop parameterized by two Props, 
 which we might call α and β. We
 need a polymorphic type. 
+
+nifty YES
+fido NO
+cheese NO
+tom YES
 -/
 
 #print and
@@ -73,9 +98,11 @@ namespace our_logic
 
 /-
 INTRODUCTION
+Suppose α and β are propositions.
+Given proofs, (a : α) and (b : β), we 
+can build a proof, (and.intro a b), of 
+α ∧ β.
 
-Given proofs, α and β, we can build
-a proof, (and.intro α β), of α ∧ β.
 Here are three ways to write exactly
 the same inductive definition.
 -/
@@ -83,24 +110,113 @@ the same inductive definition.
 inductive and'' (α β : Prop) : Prop
 | intro : α → β → and''
 
+-- Here we build a big prop out of two small ones
+def nwac_and_cwac : Prop := 
+    and'' (was_a_cat nifty) (was_a_cat cheese)
+
+-- Here we try to construct a proof of the big prop
+def pf : nwac_and_cwac := 
+    and''.intro nifty_proof _
+
+-- Here we succeed in constructing a proof of it
+def pf2 : 
+    and'' (was_a_cat nifty) (was_a_cat tom) :=
+        and''.intro nifty_proof tom_proof
+
+-- The proposition is a (logical) type (of type Prop)
+#check and'' (was_a_cat nifty) (was_a_cat tom)
+-- The proof of it is a *value* of its logical type
+#check  and''.intro nifty_proof tom_proof
+-- Be sure you see exactly what's going on here!
+-- It's analogous to the following
+#check nat -- nat is a computational (of type, Type)
+#check 5 -- 5 is a value of type nat
+-- The proposition is analogous to ℕ: it's a type
+-- The proof is analogous to 5: a value of this type
+
+
+/- 
+We formalize the and left elimination rule
+(P ∧ Q) → P, as a function that takes a proof
+of (P ∧ Q) and that returns a proof of P. The
+key ideas are that a proof of (P ∧ Q) is of
+the form (and.intro p q), where (p : P) is a
+proof of P and (q : Q) is a proof of Q. We
+use destructuring/pattern-matching to "get
+our hands on" the component proof, p, that
+is one part of a larger proof of P ∧ Q. 
+-/
+def and''_elim_left { α β : Prop} : (and'' α β) →  α 
+| (and''.intro a _) := a
+
+#reduce and''_elim_left pf2
+
+/-
+We put two tick marks on the name and''_elim_left
+because we're going to present exactly the same
+function using some slightly varying approaches
+to syntax. The last of our three versions is the
+one we'd prefer to see. And please be aware that
+Lean already provides the left and right elim
+functions through its libraries. They are called
+and.elim_left and and.elim_right. What you are
+seeing here is exactly how these functions work.
+-/
+
+-- The corresponding right elim rule, (P ∧ Q → P)
+def and''_elim_right { α β : Prop} : (and'' α β) →  β 
+| (and''.intro _ b) := b
+
+#reduce and''_elim_right pf2
+
+
+/-
+We define a polymorphic "and proposition builder"
+with explicitly named arguments. 
+-/
+
 inductive and' (α β : Prop) : Prop
 | intro (left : α) (right : β) : and'
 
+/-
+And now, for the first time, you see the use
+of "structure" in Lean to (1) define a type with
+one constructor, again called intro here, and with
+two arguments, with names left and right, of types
+a and b. The benefit of using "structure" is that
+given a value, p, of this type, the names of the
+fields (left and right) can be used to obtain the
+field values without having to write explicit
+"projection functions", such as elim_left and
+elim_right.
+-/
 structure and (a b : Prop) : Prop :=
 intro :: (left : a) (right : b)
 
 
+open and 
 
-end our_logic
+lemma cats : and (was_a_cat nifty) (was_a_cat tom) :=
+    and.intro nifty_proof tom_proof
 
-namespace our_logic 
+#reduce cats.left
+#reduce cats.right
 
+
+/-
+The Lean libraries define ∧ as an infix notation
+for (and _ _). We illustrate how this is done by
+"overloading" the similar looking ^ (caret) operator.
+We don't try to overload ∧ here because it leads to
+an ambiguous interpretation of ∧, as ∧ is already
+defined by Lean. 
+-/
 notation P ^ Q := and P Q   -- we don't overload ∧
 
 theorem were_cats_nifty_and_cheese :
     was_a_cat nifty ^ was_a_cat cheese :=
 begin
-    apply and.intro,
+    apply and.intro _ _,
     exact nifty_proof,
     sorry -- Stuck: no theorem obtained.
 end
@@ -114,10 +230,12 @@ begin
 end
 
 /-
-ELIMINATION
-
-If we have a proof of P ^ Q, we can obtain
-individual proofs of P and Q, respectively.
+For our nicely written "and" type (without ticks)
+we rewrite the elimination rules. If we have a 
+proof of P ^ Q, we can obtain individual proofs
+of P and Q, respectively. We define them in the
+"and" namespace. This is basically just as it is 
+the Lean libraries.
 -/
 
 def and.elim_left {α β : Prop} : and α β → α
@@ -126,6 +244,111 @@ def and.elim_left {α β : Prop} : and α β → α
 def and.elim_right {α β : Prop} : and α β → β
 | (and.intro a b) := b
 
+end our_logic
+
+/-
+Now we're using Lean's libraries!
+-/
+
+-- PROPOSITIONS!!!
+#check and
+def P1 : Prop := 0 = 0
+def P2 : Prop := 1 = 1
+def P12' : Prop := eq 1 1
+#check and P1 P2
+
+-- PROOFS!!!
+#check 0 = 0
+#check eq 0 0
+
+def p1 : P1 := eq.refl 0
+def p2 : P2 := eq.refl 1
+
+example : 1 = 1 + 0 := eq.refl 1
+
+/-
+Prove 0 = 0. 
+
+Proof: Equality is reflexive. This means that
+for any value, a, of any type α, a = a.
+
+∀ {T : Type}, ∀ (t : T), t = t.
+
+We apply this axiom to (ℕ and) 0, in 
+particular, to obtain a proof that 0 = 0.
+-/
+
+def P1_and_P2' : Prop := and P1 P2
+def P1_and_P2 : Prop := P1 ∧ P2     -- infix notation for and
+
+def p1_and_p2' : P1_and_P2 := and.intro 
+    p1 
+    p2
+
+def p1_and_p2 : P1_and_P2 :=
+begin
+    unfold P1_and_P2,
+    exact and.intro p1 p2,
+end
+
+#reduce p1_and_p2
+#reduce p1_and_p2'
+
+#check @and.elim_left
+
+#check and.elim_left p1_and_p2
+#check p1_and_p2.left
+
+#check and.elim_right p1_and_p2
+#check p1_and_p2.right
+
+#check @and.elim_left
+
+theorem my_elim_left : ∀ (P1 P2 : Prop), P1 ∧ P2 → P1 :=
+λ P1 P2 h, 
+    match h with
+    | and.intro a b := a
+    end
+
+/-
+English language.
+
+We are to prove P1 ∧ P2. The and introduction rule of
+natural deduction tells us that it will suffice to
+apply this rule to a proof of P1 and a proof of P2.
+So what remains to be proved are P1 and P2. To prove
+P1, that 0 = 0, the reflexive property of equality
+tells us that *every* object is equal to itself. By
+applying this rule to the particular value, 0, we 
+obtain a proof that 0 = 0. Now all that remains to be
+proved is 1 = 1. This is easily proved in the same way.
+We apply the and introduction rule to the proofs of
+these two lemmas, and thereby obtain a proof that 
+0 = 0 ∧ 1 = 1. 
+-/
+
+#check and.intro
+#check @and.intro
+
+/-
+Universal generalizations (∀ propositions)
+-/
+
+theorem th_and : ∀ {a b : Prop}, a → b → a ∧ b :=
+λ a b, 
+    λ pf_a pf_b,
+        and.intro pf_a pf_b
+
+#check th_and p1 p2     -- P1 and P2 are implicit args
+
+/-
+In English!
+-/
+
+/-
+IMPLICATION -- 2019.11.07.Lean
+-/
+
 /-
 If we have a proof that nifty was a cat ∧
 cheese was a cat, then we can deduce a proof
@@ -133,7 +356,7 @@ that cheese was a cat. Such a proof must be a
 part of the assumed proof of the conjunction.
 -/
 theorem conj_impl_left : 
-    was_a_cat nifty ^ 
+    was_a_cat nifty ∧  
     was_a_cat cheese → 
     was_a_cat cheese
 | pf_n_and_c := and.elim_right pf_n_and_c
@@ -167,8 +390,6 @@ functions. The and.intro constructor takes a
 pair of proofs and packages them up into pair
 that is accepted as a proof of a conjunction.
 -/
-
-end our_logic
 
 /-
 Lean provides exactly such this polymorphic
