@@ -22,7 +22,8 @@ of P or a proof of Q.
 In this class, we assume (P Q : Prop), 
 (T : Type), (x y : T) then summarize, 
 review,  and practice using the rules 
-to build and use proofs of these forms:
+to build and use proofs of propositions
+of these forms:
 
 - ∀ (p : P), Q  [Q usually a predicate]
 - x = y
