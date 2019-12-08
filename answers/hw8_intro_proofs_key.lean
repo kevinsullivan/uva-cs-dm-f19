@@ -286,7 +286,7 @@ open is_odd
 
 example : is_odd 1 := one_is_odd 
 
--- ANSWER
+-- ANSWER (version 1, ordinary "code")
 
 example : is_odd 7 := 
 two_plus_odd_is_odd 
@@ -301,6 +301,7 @@ two_plus_odd_is_odd
         )
     )
 
+-- ANSWER (version 2, using tactic script)
 example : is_odd 7 :=
 begin
     apply two_plus_odd_is_odd,
@@ -313,53 +314,110 @@ end
 /-
 Introducing an important concept. In the preceding
 problems, we've seen that we can think of a predicate
-with one argument as defining a property objects, such
-as the property of being even. Now we shift perspective
-from the concept of a property, per se, to the concept
-of "the set of objects that have a given property." The
-set of objects that have the is_even property, for
-example, could be written as
+with one argument as defining a *property* of objects.
+An example is the property (of natural numbers) of 
+being even or of being prime. 
+
+Now we shift perspective from the concept of a 
+predicate specifying a property to the concept of a
+predicate with one object defininging "the *set* of 
+objects that have such a property." 
+    
+The set of objects that have the is_even property,
+for example, could be written as
 
     evens = {0, 2, 4, 6, 8, 10, ...}
 
-or more formally as
+This notation is imprecise as it relies on the
+intuition of the reader to fill in the ... The
+set can be defined precisely by a predicate. The
+usual "set comprehension notation" is a follows:
 
     evens = { n : ℕ | is_even n}
 
-The elements of these sets are all, and only,
-the values that "satisfy" the is_even predicate.
-A value satisfies its predicate if, when plugged
-in, the resulting proposition has a proof (and so
-is true). The key conclusion is that a predicate
-with a single argument defines a *set*, namely 
-the set of all and only those objects that have
-that property.
+This notation would be read as stating that the
+set, evens, is the set of natural numbers, n, 
+such that n is even (such that n satifies the
+is_even predicate).
+
+A value satisfies a predicate if, when "plugged
+in" as the value of the argument, the resulting 
+proposition has a proof, and so is true. 
+
+The key idea, then, is that a predicate with a 
+single argument defines a *set*, namely the set 
+of all and only the objects with that property.
 -/
 
 /-
 #4. Predicates and binary relations
 
-Mathematicians define *binary relations* as sets
+The idea that predicates define sets extends
+directly to predicates with several arguments.
+A predicate with two arguments, for example, 
+specifies the set of *pairs* of values that 
+make the predicate true.
+
+A particularly important case is the use of
+predicates with two arguments to define sets of
+pairs understood as *binary relations*.
+
+Mathematicians define binary relations as sets
 of ordered pairs. For example, the equality relation
 on natural numbers comprises the set of of all pairs
 of natural numbers such that the first and second
-elements are the same. We could write this set like
-this:
+elements are the same. No other pairs are "in" the
+set of pairs comprising the equality relation.
 
-    equals = { (0,0), (1,1), (2,2), ...},
+We could write this set like this:
 
-or like this:
+    equal_nat = { (0,0), (1,1), (2,2), ...},
 
-    equals = { (m : ℕ, n : ℕ) | m = n }
+But once again that's not precise. To be precise,
+we could write it like this:
 
-We formalize binary relations as predicates with 
-*two* arguments. The type of such a predicate in 
-Lean is thus α → β → Prop, where α and β are the
-types of the arguments.
+    equal_nat = { (m : ℕ, n : ℕ) | m = n }
 
-In our example, we have a two-place predicate that
-defines the set of ordered pairs of natural numbers
-where the two elements of each pair are co-equal.
+That is, equal_nat is the set of (m, n) pairs
+such that m = n. The vertical bar is read "such
+that".
+
+In the constructive logic of Lean we define such
+a predicate as an family of propositions with two
+parameters, with proof constructors that specify
+the exact requirements for constructing a proof of
+any such proposition.
+
+inductive  equal_nat : ℕ → ℕ → Prop
+| mk : ∀ (m n : ℕ), m = n → equal_nat m n
+
+The first line defines equal_nat to be a
+predicate with two arguments, each a nat.
+It thus gives rise to propositions of the
+form equal_nat 0 0, equal_nat 0 1, and so
+forth, for *all pairs* of natural numbers.
+
+However, we want to specify that only some
+of these pairs, namely those for which m = n,
+are "in the equals_nat relation." The proof
+constructor, mk, serves the purpose. It is
+the only constructor, and therefore the only 
+way to create a proof of such a proposition.
+It takes *three* arguments, m, n, and a 
+proof that m = n. If m and n are not equal,
+there will be no way to apply mk to the 
+three arguments it needs! A proof can be
+constructed if and only if m = n. In this
+way, the constructor specifies *exactly*
+the set of pairs that are considered to 
+be in the binary relation.
+
+The type of predicate defining a binary
+relation in Lean more generally is thus
+α → β → Prop, where α and β are the types 
+of the arguments: the types of the first
+and second elements of the pairs in the
+relation.
 
 Study and understand the following specification
 of this binary relation. Look at the construtor,
@@ -369,6 +427,15 @@ id_nat_relation if you have a proof of n = m. (In
 other words, it suffices to show that n = m using
 Lean's built in equality relation to construct a
 proof that (n, m) is in our id_nat_relation.) 
+-/
+
+inductive  equal_nat : ℕ → ℕ → Prop
+| mk : ∀ (m n : ℕ), m = n → equal_nat m n
+
+/-
+In class and on the homework, we called this 
+relation id_nat_relation. We'll thus use that
+name for the rest of these class notes.
 -/
 
 inductive id_nat_relation : ℕ → ℕ → Prop
@@ -414,6 +481,13 @@ relation to be reflexive.
 def reflexive {α : Type} (r : α → α → Prop) :=
     ∀ (a : α), r a a
 
+def symmetric {α : Type} (r : α → α → Prop) :=
+    ∀ (a b: α), r a b → r b a
+
+def transitive {α : Type} (r : α → α → Prop) :=
+    ∀ (a b c: α), r a b → r b c → r a c
+
+
 /-
 A. Formally state and prove that id_nat_relation
 is reflexive. Hint: use a script and start it
@@ -433,12 +507,12 @@ begin
 unfold reflexive,
 assume (a : ℕ),
 --sorry               -- replace this
-apply id_nat_relation.mk a a (eq.refl a)
+apply id_nat_relation.mk a a (eq.refl a),
 end
 
 example : reflexive id_nat_relation :=
     λ (a : ℕ), 
-        id_nat_relation.mk a a (eq.refl a)
+        id_nat_relation.mk a a (re.refl a)
 
 /-
 B. [Double extra credit.]
@@ -450,12 +524,6 @@ that our id_nat_reflexive relation is also symmetric
 and transitive.
 -/
 
-def symmetric {α : Type} (r : α → α → Prop) :=
-    ∀ (a b : α), r a b → r b a
-
-def transitive {α : Type} (r : α → α → Prop) :=
-    ∀ (a b c: α), r a b → r b c → r a c
-
 example : 
     symmetric id_nat_relation ∧ 
     transitive id_nat_relation :=
@@ -463,13 +531,13 @@ and.intro
 -- symmetric
 (
     λ (a b : ℕ),
-    λ h,
+    λ (h : id_nat_relation a b),
     match h with
         -- only constructor for h is mk
         -- pattern matching destructures
         -- by cases
         (id_nat_relation.mk a b e) := 
-            id_nat_relation.mk _ _ 
+            id_nat_relation.mk b a 
                 (eq.symm e)
     end
 )
@@ -496,6 +564,7 @@ begin
     apply and.intro _ _,
 
     -- symmetric
+    unfold symmetric,
     assume (a b : ℕ),
     assume (h : id_nat_relation a b),
     cases h with a b e, -- new tactic 
