@@ -64,7 +64,8 @@ specific value of the quantified type,
 
 Example: Prove "all balls are green".
 
-Step 0: Formalize proposition.
+Step 0: Formalize proposition (whether
+you are foralizing the proof or not).
 
 ∀ (b : Ball), Green b
 
@@ -74,7 +75,7 @@ ball, and now all that remains to
 be proved is Green b (that this b
 in particular) is Green.
 
-Formally: Green b. Remaining goal.
+Formally: Green b0. Remaining goal.
 
 Example: prove ∀ (n : ℕ), n = n.
 
@@ -92,23 +93,39 @@ Thus we have proved the proposition.
 -/
 
 theorem all_n_eq_n : ∀ (n : ℕ), n = n :=
-    λ (n0 : ℕ), (eq.refl n0)
+    λ (n0 : ℕ), 
+        eq.refl n0
+
+theorem all_n_eq_n' : ∀ (n : ℕ), n = n :=
+begin
+    assume (n0 : ℕ),
+    exact eq.refl n0,
+end
+
+#check all_n_eq_n
+#check all_n_eq_n'
+
+
+
 
 example : ℕ := 5
 
-example : ∀ (n : ℕ), nat.pred (nat.succ n) = n :=
-    λ (n0 : ℕ), 
-        (eq.refl n0)
-
+theorem f :
+    ∀ (n : ℕ), nat.pred (nat.succ n) = n :=
+        λ (n : ℕ),
+            (eq.refl n)
 /- ∀ Elimination -/
+
+#reduce f 3
 
 /-
 Example:
 
 Prove that if every ball is green, then 
-a specific ball, b0, is green.
+any specific ball, b0, is green.
 
-(∀ (b : Ball, Green b)) → ((b0: Ball) → (Green b0))
+(∀ (b : Ball), Green b) → (∀ (b0 : Ball), Green b0)
+
 
 See below. The elimination rule for forall is based
 on the idea that we can *apply* a proof of a forall
@@ -116,7 +133,14 @@ to a specific value (an argument) to build proof
 for that specific value.
 -/
 
+axioms (Ball : Type) (Green : Ball → Prop)
 
+example : (∀ (b : Ball), Green b) → (∀ (b0 : Ball), Green b0) :=
+begin
+assume f,
+assume (b0 : Ball),
+exact (f b0),
+end
 
 /-
 IMPLICATIONS
@@ -146,12 +170,10 @@ QED
 
 -/
 
-axioms (Ball : Type) (Green : Ball → Prop)
-
 example : (∀ (b : Ball), Green b) → ∀ (b0: Ball), Green b0 :=
-λ h, 
-    λ a, 
-        (h a)
+    λ (h: (∀ (b : Ball), Green b)),
+        λ (b0 : Ball),
+            (h b0)
 
 /-
 Assume that we have proof, h, that every ball is green.
@@ -169,3 +191,44 @@ gives us a proof that b0 is green.
 QED.
 
 -/
+
+
+theorem and_commutes : ∀ (P Q : Prop), P ∧ Q → Q ∧ P :=
+begin
+    intros P Q,
+    assume (h : P ∧ Q),
+    apply and.intro _ _,
+    exact (and.elim_right h),
+    exact (and.elim_left h)
+end
+
+theorem and_commutes' : ∀ (P Q : Prop), P ∧ Q → Q ∧ P :=
+λ P Q,
+    λ h,
+        and.intro 
+            (and.elim_right h)
+            (and.elim_left h)
+
+
+
+
+namespace hidden
+
+inductive nat : Type
+| zero
+| succ : nat → nat
+
+def n0 := nat.zero
+def n1 := nat.succ nat.zero
+def n2 := nat.succ (nat.succ nat.zero)
+def n3 := nat.succ (nat.succ (nat.succ nat.zero))
+def n4 := nat.succ (nat.succ (nat.succ (nat.succ nat.zero)))
+
+def inc (n : nat) : nat :=
+    nat.succ n
+
+def dec : nat → nat
+| nat.zero := nat.zero
+| (nat.succ n') := n'
+
+end hidden
